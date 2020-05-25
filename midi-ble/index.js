@@ -74,14 +74,71 @@ const onDataImpl = (uuid, callback) => (data) => {
   }
 };
 
-const servicesAndCharacteristics = (_uuid, _services, characteristics, callback) => {
+const sendNoteOn = async (characteristic, channel, note, velocity) => {
+  if (channel === null) { return null; }
+  const { header, messageTimestamp } = getTimestampBytes();
+  const midiStatus = channel & 0x0f | noteon; // eslint-disable-line
+  const midiOne = note;
+  const midiTwo = velocity;
+  // const midiOne = note & 0x7f;
+  // const midiTwo = velocity & 0x7f;
+  const packet = new Uint8Array([
+    header,
+    messageTimestamp,
+    midiStatus,
+    midiOne,
+    midiTwo,
+  ]);
+
+  // const temperature = Buffer.alloc(2);
+  // temperature.writeUInt16BE(450, 0);
+
+  console.log(packet);
+  const buffer = Buffer.from([
+    header,
+    messageTimestamp,
+    midiStatus,
+    midiOne,
+    midiTwo,
+  ]);
+  console.log(buffer);
+  const result = await characteristic.writeAsync(buffer);
+  return result;
+};
+
+const sendNoteOff = async (characteristic, channel, note) => {
+  if (channel === null) { return null; }
+  const { header, messageTimestamp } = getTimestampBytes();
+  const midiStatus = channel & 0x0f | noteoff; // eslint-disable-line
+  const midiOne = note;
+  // const midiTwo = velocity;
+  // const midiOne = note & 0x7f;
+  // const midiTwo = velocity & 0x7f;
+  const packet = new Uint8Array([
+    header,
+    messageTimestamp,
+    midiStatus,
+    midiOne
+    // midiTwo,
+  ]);
+  const result = await characteristic.writeAsync(
+    Buffer.from(packet)
+  );
+  return result;
+};
+
+const servicesAndCharacteristics = (_uuid, services, characteristics, callback) => {
   const characteristic = characteristics[0]; // eslint-disable-line
-  const onData = onDataImpl(characteristic.uuid, callback);
-  characteristic.on('data', (data, _isNotification) => { // eslint-disable-line
-    onData(data);
-  });
-  characteristic.subscribe(); // todo: allow unsubscribe
-  callback.setCharacteristic(characteristic);
+  if (characteristic) {
+    console.log('---services:');
+    console.log(services);
+    const onData = onDataImpl(characteristic.uuid, callback);
+    characteristic.on('data', (data, _isNotification) => { // eslint-disable-line
+      onData(data);
+    });
+    characteristic.subscribe(); // todo: allow unsubscribe
+    callback.setCharacteristic(characteristic);
+  }
 };
 
 const connectedPeripheral = (peripheral, callback) => {
@@ -182,7 +239,9 @@ const sendControlChange = async (characteristic, channel, controlNumber, value) 
     midiOne,
     midiTwo,
   ]);
-  const result = await characteristic.writeValue(packet);
+  const result = await characteristic.writeAsync(
+    Buffer.from(packet)
+  );
   return result;
 };
 
@@ -193,4 +252,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.initNoble = initNoble;
 exports.handleScan = handleScan;
 exports.sendControlChange = sendControlChange;
+exports.sendNoteOff = sendNoteOff;
+exports.sendNoteOn = sendNoteOn;
 exports.sendProgramChange = sendProgramChange;
