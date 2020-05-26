@@ -77,7 +77,7 @@ const onDataImpl = (uuid, callback) => (data) => {
 const sendNoteOn = async (characteristic, channel, note, velocity) => {
   if (channel === null) { return null; }
   const { header, messageTimestamp } = getTimestampBytes();
-  const midiStatus = channel & 0x0f | noteon; // eslint-disable-line
+  const midiStatus = (channel - 1) & 0x0f | noteon; // eslint-disable-line
   const midiOne = note;
   const midiTwo = velocity;
   // const midiOne = note & 0x7f;
@@ -117,7 +117,7 @@ const sendNoteOn = async (characteristic, channel, note, velocity) => {
 const sendNoteOff = async (characteristic, channel, note) => {
   if (channel === null) { return null; }
   const { header, messageTimestamp } = getTimestampBytes();
-  const midiStatus = channel & 0x0f | noteoff; // eslint-disable-line
+  const midiStatus = (channel - 1) & 0x0f | noteoff; // eslint-disable-line
   const midiOne = note;
   // const midiTwo = velocity;
   // const midiOne = note & 0x7f;
