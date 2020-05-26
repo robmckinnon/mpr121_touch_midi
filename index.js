@@ -32,7 +32,9 @@ const MPR121 = require('adafruit-mpr121'),
       mpr121  = new MPR121(0x5A, 1);
 
 mpr121.on('touch', (pin) => {
+  console.log('.')
   if (_characteristic && _channel) {
+    console.log('#')
     const note = pin + 50;
     midiBle.sendNoteOn(_characteristic, _channel, note, 97);
   }
@@ -40,6 +42,7 @@ mpr121.on('touch', (pin) => {
 
 mpr121.on('release', (pin) => {
   if (_characteristic && _channel) {
+    console.log('-')
     const note = pin + 50;
     midiBle.sendNoteOff(_characteristic, _channel, note);
   }
