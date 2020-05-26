@@ -95,13 +95,12 @@ const sendNoteOn = async (characteristic, channel, note, velocity) => {
 
   console.log(packet);
   const buffer = Buffer.alloc(5);
-  buffer.writeUIn8BE(
-    header,
-    messageTimestamp,
-    midiStatus,
-    midiOne,
-    midiTwo,
-  );
+  buffer.writeUInt8BE(header, 0);
+  buffer.writeUInt8BE(messageTimestamp, 1);
+  buffer.writeUInt8BE(midiStatus, 2);
+  buffer.writeUInt8BE(midiOne, 3);
+  buffer.writeUInt8BE(midiTwo, 4);
+
   console.log(buffer);
   try {
     const result = await characteristic.writeAsync(buffer, false);
@@ -128,9 +127,16 @@ const sendNoteOff = async (characteristic, channel, note) => {
     midiOne
     // midiTwo,
   ]);
+  const buffer = Buffer.alloc(4);
+  buffer.writeUInt8BE(header, 0);
+  buffer.writeUInt8BE(messageTimestamp, 1);
+  buffer.writeUInt8BE(midiStatus, 2);
+  buffer.writeUInt8BE(midiOne, 3);
+  // buffer.writeUInt8BE(midiTwo, 4);
   const result = await characteristic.writeAsync(
-    Buffer.from(packet)
+    buffer;
   );
+  console.log(result);
   return result;
 };
 
