@@ -94,15 +94,17 @@ const sendNoteOn = async (characteristic, channel, note, velocity) => {
   // temperature.writeUInt16BE(450, 0);
 
   console.log(packet);
-  const buffer = Buffer.alloc(5);
-  buffer.writeUInt8BE(header, 0);
-  buffer.writeUInt8BE(messageTimestamp, 1);
-  buffer.writeUInt8BE(midiStatus, 2);
-  buffer.writeUInt8BE(midiOne, 3);
-  buffer.writeUInt8BE(midiTwo, 4);
-
-  console.log(buffer);
+  // const buffer = Buffer.alloc(5);
+  // buffer.writeUInt8BE(header, 0);
+  // buffer.writeUInt8BE(messageTimestamp, 1);
+  // buffer.writeUInt8BE(midiStatus, 2);
+  // buffer.writeUInt8BE(midiOne, 3);
+  // buffer.writeUInt8BE(midiTwo, 4);
+  //
+  // console.log(buffer);
   try {
+    console.log('writeAsync');
+    const buffer = Buffer.from(packet);
     const result = await characteristic.writeAsync(buffer, false);
     console.log('result');
     console.log(result);
@@ -127,15 +129,22 @@ const sendNoteOff = async (characteristic, channel, note) => {
     midiOne
     // midiTwo,
   ]);
-  const buffer = Buffer.alloc(4);
-  buffer.writeUInt8BE(header, 0);
-  buffer.writeUInt8BE(messageTimestamp, 1);
-  buffer.writeUInt8BE(midiStatus, 2);
-  buffer.writeUInt8BE(midiOne, 3);
+  // const buffer = Buffer.alloc(4);
+  // buffer.writeUInt8BE(header, 0);
+  // buffer.writeUInt8BE(messageTimestamp, 1);
+  // buffer.writeUInt8BE(midiStatus, 2);
+  // buffer.writeUInt8BE(midiOne, 3);
   // buffer.writeUInt8BE(midiTwo, 4);
-  const result = await characteristic.writeAsync(buffer);
-  console.log(result);
-  return result;
+  try {
+    console.log('writeAsync');
+    const buffer = Buffer.from(packet);
+    const result = await characteristic.writeAsync(buffer, false);
+    console.log('result');
+    console.log(result);
+    return result;
+  } catch (e) {
+    displayError(e);
+  }
 };
 
 const servicesAndCharacteristics = (_uuid, services, characteristics, callback) => {
