@@ -133,9 +133,7 @@ const sendNoteOff = async (characteristic, channel, note) => {
   buffer.writeUInt8BE(midiStatus, 2);
   buffer.writeUInt8BE(midiOne, 3);
   // buffer.writeUInt8BE(midiTwo, 4);
-  const result = await characteristic.writeAsync(
-    buffer;
-  );
+  const result = await characteristic.writeAsync(buffer);
   console.log(result);
   return result;
 };
