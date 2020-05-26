@@ -80,8 +80,7 @@ const sendNoteOn = async (characteristic, channel, note, velocity) => {
   const midiStatus = (channel - 1) & 0x0f | noteon; // eslint-disable-line
   const midiOne = note;
   const midiTwo = velocity;
-  // const midiOne = note & 0x7f;
-  // const midiTwo = velocity & 0x7f;
+
   const packet = new Uint8Array([
     header,
     messageTimestamp,
@@ -90,25 +89,9 @@ const sendNoteOn = async (characteristic, channel, note, velocity) => {
     midiTwo,
   ]);
 
-  // const temperature = Buffer.alloc(2);
-  // temperature.writeUInt16BE(450, 0);
-
-  console.log(packet);
-  // const buffer = Buffer.alloc(5);
-  // buffer.writeUInt8BE(header, 0);
-  // buffer.writeUInt8BE(messageTimestamp, 1);
-  // buffer.writeUInt8BE(midiStatus, 2);
-  // buffer.writeUInt8BE(midiOne, 3);
-  // buffer.writeUInt8BE(midiTwo, 4);
-  //
-  // console.log(buffer);
   try {
-    console.log('writeAsync');
     const buffer = Buffer.from(packet);
-    const result = await characteristic.writeAsync(buffer, false);
-    console.log('result');
-    console.log(result);
-    return result;
+    return characteristic.write(buffer, true);
   } catch (e) {
     displayError(e);
   }
@@ -119,29 +102,15 @@ const sendNoteOff = async (characteristic, channel, note) => {
   const { header, messageTimestamp } = getTimestampBytes();
   const midiStatus = (channel - 1) & 0x0f | noteoff; // eslint-disable-line
   const midiOne = note;
-  // const midiTwo = velocity;
-  // const midiOne = note & 0x7f;
-  // const midiTwo = velocity & 0x7f;
   const packet = new Uint8Array([
     header,
     messageTimestamp,
     midiStatus,
     midiOne
-    // midiTwo,
   ]);
-  // const buffer = Buffer.alloc(4);
-  // buffer.writeUInt8BE(header, 0);
-  // buffer.writeUInt8BE(messageTimestamp, 1);
-  // buffer.writeUInt8BE(midiStatus, 2);
-  // buffer.writeUInt8BE(midiOne, 3);
-  // buffer.writeUInt8BE(midiTwo, 4);
   try {
-    console.log('writeAsync');
     const buffer = Buffer.from(packet);
-    const result = await characteristic.writeAsync(buffer, false);
-    console.log('result');
-    console.log(result);
-    return result;
+    return characteristic.write(buffer, false);
   } catch (e) {
     displayError(e);
   }
