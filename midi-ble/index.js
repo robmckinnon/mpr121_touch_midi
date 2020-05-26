@@ -95,13 +95,13 @@ const sendNoteOn = async (characteristic, channel, note, velocity) => {
 
   console.log(packet);
   const buffer = Buffer.alloc(5);
-  buffer.writeUIn8BE([
+  buffer.writeUIn8BE(
     header,
     messageTimestamp,
     midiStatus,
     midiOne,
     midiTwo,
-  ]);
+  );
   console.log(buffer);
   try {
     const result = await characteristic.writeAsync(buffer, false);
