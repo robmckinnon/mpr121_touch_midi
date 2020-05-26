@@ -94,7 +94,8 @@ const sendNoteOn = async (characteristic, channel, note, velocity) => {
   // temperature.writeUInt16BE(450, 0);
 
   console.log(packet);
-  const buffer = Buffer.from([
+  const buffer = Buffer.alloc(5);
+  buffer.writeUIn8BE([
     header,
     messageTimestamp,
     midiStatus,
@@ -102,8 +103,14 @@ const sendNoteOn = async (characteristic, channel, note, velocity) => {
     midiTwo,
   ]);
   console.log(buffer);
-  const result = await characteristic.writeAsync(buffer);
-  return result;
+  try {
+    const result = await characteristic.writeAsync(buffer, false);
+    console.log('result');
+    console.log(result);
+    return result;
+  } catch (e) {
+    displayError(e);
+  }
 };
 
 const sendNoteOff = async (characteristic, channel, note) => {
