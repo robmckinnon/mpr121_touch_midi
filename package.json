@@ -23,6 +23,7 @@
   "homepage": "https://github.com/robmckinnon/mpr121_touch_midi#readme",
   "dependencies": {
     "@abandonware/noble": "^1.9.2-9",
-    "adafruit-mpr121": "robmckinnon/node_mpr121#upgrade-i2c-bus-5-2"
+    "adafruit-mpr121": "robmckinnon/node_mpr121#upgrade-i2c-bus-5-2",
+    "node-ble": "^1.1.0"
   }
 }

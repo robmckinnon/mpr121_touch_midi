@@ -1,6 +1,6 @@
 const noble = require('@abandonware/noble');
 
-const midiServiceUUID = '03b80e5aede84b33a7516ce34ec4c700';
+const midiServiceUUID = '03b80e5a-ede8-4b33-a751-6ce34ec4c700';
 const midiCharacteristicUUID = '7772e5db38684112a1a9f2669d106bf3';
 const serviceIds = [midiServiceUUID];
 const characteristicIds = [midiCharacteristicUUID];
@@ -22,6 +22,34 @@ const midiTypes = {
   [channelat]: 'channelat',
   [pitchbend]: 'pitchbend',
 };
+
+const {createBluetooth} = require('node-ble');
+
+const initNodeBle = () => {
+  const {bluetooth, destroy} = createBluetooth();
+  const adapter = await bluetooth.defaultAdapter();
+
+  if (!await adapter.isDiscovering()) {
+    await adapter.startDiscovery();
+  }
+
+  const devices = await adapter.devices();
+  console.log(devices);
+  // 00:00:00:00:00:00
+  const device = await adapter.waitDevice('MD-BTO1');
+  await device.connect();
+  const gattServer = await device.gatt();
+
+  const service1 = await gattServer.getPrimaryService(midiServiceUUID);
+  const characteristic1 = await service1.getCharacteristic(midiCharacteristicUUID);
+
+  await characteristic1.startNotifications();
+  characteristic1.on('valuechanged', buffer => {
+    console.log(buffer)
+  });
+  console.log(buffer)
+}
+
 
 const displayError = (e) => {
   console.log(e);// eslint-disable-line
