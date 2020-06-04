@@ -24,6 +24,7 @@
   "dependencies": {
     "@abandonware/noble": "^1.9.2-9",
     "adafruit-mpr121": "robmckinnon/node_mpr121#upgrade-i2c-bus-5-2",
+    "midi": "^1.0.0",
     "node-ble": "^1.1.0"
   }
 }
