@@ -31,7 +31,7 @@ const noteOn = (channel, note, vel) => {
     vel]);
 }
 
-const noteOn = (channel, note, vel) => {
+const noteOff = (channel, note, vel) => {
   output.sendMessage([
     channel & 0x0f | noteoff,// eslint-disable-line
     note,
