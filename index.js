@@ -35,11 +35,10 @@ const noteOn = (channel, note, vel) => {
   output.sendMessage(msg);
 }
 
-const noteOff = (channel, note, vel) => {
+const noteOff = (channel, note) => {
   const msg = [
     (channel -1) & 0x0f | noteoff,// eslint-disable-line
-    note,
-    vel];
+    note];
   console.log(msg);// eslint-disable-line
   output.sendMessage(msg);
 }
@@ -51,7 +50,7 @@ const scale = [44, 46, 49, 51, 54, 56, 58, 61, 63, 66, 68, 70]
 
 mpr121.on('touch', (pin) => {
   const note = scale[pin % 12];
-  noteOn(1, note);
+  noteOn(1, note, 97);
 });
 
 mpr121.on('release', (pin) => {
