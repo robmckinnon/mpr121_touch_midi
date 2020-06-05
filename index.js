@@ -21,21 +21,27 @@ console.log(output.getPortName(1));// eslint-disable-line
 // Open the first available output port.
 output.openPort(1);
 
+output.sendMessage([176,22,1]);
+
 // Send a MIDI message.
 // output.sendMessage([176,22,1]);
 
 const noteOn = (channel, note, vel) => {
-  output.sendMessage([
-    channel & 0x0f | noteon,// eslint-disable-line
+  const msg = [
+    (channel -1) & 0x0f | noteon,// eslint-disable-line
     note,
-    vel]);
+    vel];
+  console.log(msg);// eslint-disable-line
+  output.sendMessage(msg);
 }
 
 const noteOff = (channel, note, vel) => {
-  output.sendMessage([
-    channel & 0x0f | noteoff,// eslint-disable-line
+  const msg = [
+    (channel -1) & 0x0f | noteoff,// eslint-disable-line
     note,
-    vel]);
+    vel];
+  console.log(msg);// eslint-disable-line
+  output.sendMessage(msg);
 }
 
 // // Close the port when done.
