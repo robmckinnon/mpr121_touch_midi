@@ -26,19 +26,25 @@ output.sendMessage([176,22,1]);
 // Send a MIDI message.
 // output.sendMessage([176,22,1]);
 
+const decToBinary = (d) => { return (d >>> 0).toString(2) };
+
 const noteOn = (channel, note, vel) => {
   const msg = [
-    (channel) & 0x0f | noteon,// eslint-disable-line
+    // (channel) & 0x0f | noteon,// eslint-disable-line
+    (noteon << 4) + channel,// eslint-disable-line
     note,
     vel];
+  console.log(decToBinary(msg[0]));// eslint-disable-line
   console.log(msg);// eslint-disable-line
   output.sendMessage(msg);
 }
 
 const noteOff = (channel, note) => {
   const msg = [
-    (channel) & 0x0f | noteoff,// eslint-disable-line
+    // (channel) & 0x0f | noteoff,// eslint-disable-line
+    (noteoff << 4) + channel,// eslint-disable-line
     note];
+  console.log(decToBinary(msg[0]));// eslint-disable-line
   console.log(msg);// eslint-disable-line
   output.sendMessage(msg);
 }
