@@ -28,7 +28,7 @@ output.sendMessage([176,22,1]);
 
 const noteOn = (channel, note, vel) => {
   const msg = [
-    (channel -1) & 0x0f | noteon,// eslint-disable-line
+    (channel) & 0x0f | noteon,// eslint-disable-line
     note,
     vel];
   console.log(msg);// eslint-disable-line
@@ -37,7 +37,7 @@ const noteOn = (channel, note, vel) => {
 
 const noteOff = (channel, note) => {
   const msg = [
-    (channel -1) & 0x0f | noteoff,// eslint-disable-line
+    (channel) & 0x0f | noteoff,// eslint-disable-line
     note];
   console.log(msg);// eslint-disable-line
   output.sendMessage(msg);
