@@ -11,6 +11,10 @@ const programchange = 12;
 const channelat = 13;
 const pitchbend = 14;
 
+// reface cp
+const delayDepthCC = 89;
+const delayTimeCC = 90;
+
 const output = new midi.Output();
 
 const count = output.getPortCount();
@@ -30,22 +34,30 @@ const decToBinary = (d) => { return (d >>> 0).toString(2) };
 
 const noteOn = (channel, note, vel) => {
   const msg = [
-    // (channel) & 0x0f | noteon,// eslint-disable-line
     (noteon << 4) + channel,// eslint-disable-line
     note,
     vel];
-  console.log(decToBinary(msg[0]));// eslint-disable-line
-  console.log(msg);// eslint-disable-line
+  // console.log(decToBinary(msg[0]));// eslint-disable-line
+  // console.log(msg);// eslint-disable-line
   output.sendMessage(msg);
 }
 
 const noteOff = (channel, note) => {
   const msg = [
-    // (channel) & 0x0f | noteoff,// eslint-disable-line
     (noteoff << 4) + channel,// eslint-disable-line
     note];
-  console.log(decToBinary(msg[0]));// eslint-disable-line
-  console.log(msg);// eslint-disable-line
+  // console.log(decToBinary(msg[0]));// eslint-disable-line
+  // console.log(msg);// eslint-disable-line
+  output.sendMessage(msg);
+}
+
+const controlChange = (channel, control, level) => {
+  const value = Math.floor((127 / 11) * level);
+  const msg = [
+    (controlchange << 4) + channel,
+    control,
+    value
+  ];
   output.sendMessage(msg);
 }
 
@@ -56,10 +68,18 @@ const scale = [44, 46, 49, 51, 54, 56, 58, 61, 63, 66, 68, 70]
 
 mpr121.on('touch', (pin) => {
   const note = scale[pin % 12];
-  noteOn(1, note, 97);
+  if (note > 61) {
+    controlChange(1, delayTimeCC, pin % 12);
+  } else {
+    noteOn(1, note, 97);
+  }
 });
 
 mpr121.on('release', (pin) => {
   const note = scale[pin % 12];
-  noteOff(1, note);
+  if (note > 61) {
+    controlChange(1, delayDepthCC, pin % 12);
+  } else {
+    noteOff(1, note);
+  }
 });
